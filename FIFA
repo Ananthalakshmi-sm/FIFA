@@ -1,0 +1,79 @@
+use ds_july_2025;
+select * from fifa;
+---#How many players are there in the dataset? ---#
+select count(*) from fifa;
+---# How many nationalities do these players belong to?--#
+select nationality,count(distinct id) as total_cnt from fifa
+group by nationality;
+---#What is the total wage given to all players? What's the average and standard
+deviation?--#
+select sum(wage) as total_wage,
+avg(wage) as average_wage,
+stddev(wage) as stddev_wage from fifa;
+---#Which nationality has the highest number of players, what are the top 3
+nationalities by # of players?--#
+select nationality,count(distinct id) as player_cnt from fifa
+group by nationality
+order by player_cnt desc
+limit 3;
+---#Which player has the highest wage? Who has the lowest?---#
+select id,max(wage) as maximum_wage from fifa
+group by id
+order by max(wage)desc limit 1;
+select id,min(wage) as minimum_wage from fifa
+group by id
+order by min(wage)asc limit 1;
+#--The player having the – best overall rating? Worst overall rating?--#
+ ---------#best#--------
+ select name,max(overall) as maximum_overall from fifa
+ group by name
+ order by max(overall) desc limit 1;
+ ---------#worst#--------
+ select name,min(overall) as minimum_overall from fifa
+ group by name
+ order by min(overall) asc limit 1;
+ #--- Club having the highest total of overall rating? Highest Average of
+overall rating?#---
+ select club,sum(overall) as total_overall from fifa
+ group by club
+ order by sum(overall) desc limit 1;
+select club,avg(overall) as total_overall from fifa
+group by club
+order by avg(overall) desc limit 1;
+#---What are the top 5 clubs based on the average ratings of their players
+and their corresponding averages?---#
+select club,avg(overall) as average_overall from fifa
+group by club
+order by avg(overall) desc limit 5;
+---#What is the distribution of players whose preferred foot is left vs
+right?--#
+select preferred_foot,count(*) as player_cnt from fifa
+where preferred_foot in('left','right')
+group by preferred_foot
+having count(*)>1
+order by preferred_foot desc;
+--#Which jersey number is the luckiest?#---
+select Jersey_Number, COUNT(*) AS HighPotentialPlayers from Fifa
+where Potential >= 85
+group by Jersey_Number
+having COUNT(*) > 5
+order by HighPotentialPlayers DESC
+limit 1;
+---#What is the frequency distribution of nationalities among players whose club
+name starts with M?#---
+select club,nationality,count(*) as total_cnt_players from fifa
+where club like'm%'
+group by club,nationality
+order by count(*) desc;
+---#How many players have joined their respective clubs in the date range 20 May
+2018 to 10 April 2019 (both inclusive)?
+select count(*) from fifa
+where joined between '20 May 2018'and '10 April 2019';
+#How many players have joined their respective clubs date wise?
+select date(str_to_date(joined,'%Y-%m-%d'))as joined_date,club,count(id) from
+fifa
+group by 1,2;
+----#How many players have joined their respective clubs yearly?#----
+select year(str_to_date(joined,'%Y-%m-%d'))as joined_year,club,count(id) from
+fifa
+group by 1,2;
